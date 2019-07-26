@@ -5,8 +5,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,20 +21,34 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class FarmersHoe extends Item implements IUpgradable {
+public class FarmersHoe extends Item {
 
-	private int range = 1;
-
-	public FarmersHoe(Tier tier) {
-		this.setRegistryName("item_farmers_hoe_" + tier.toString());
-		this.setUnlocalizedName("farmersHoe(" + tier.toString() + ")");
+	public FarmersHoe() {
+		this.setRegistryName("item_farmers_hoe");
+		this.setUnlocalizedName("farmersHoe");
 		this.setCreativeTab(CreativeTabs.TOOLS);
 		this.setMaxStackSize(1);
-		this.setMaxDamage(tier.getDurability());
 
-		this.range = tier.getRange();
+		this.setMaxDamage(1024);
 
 		ModItem.ITEMS.add(this);
+	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public int getItemEnchantability() {
+		return 15;
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if(enchantment == Enchantments.EFFICIENCY) return true;
+		if(enchantment == Enchantments.UNBREAKING) return true;
+		return false;
 	}
 
 	/**
@@ -39,7 +56,6 @@ public class FarmersHoe extends Item implements IUpgradable {
 	 */
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
 		ItemStack itemStack = player.getHeldItem(hand);
 		if(!player.canPlayerEdit(pos.offset(facing), facing, itemStack)) {
 			return EnumActionResult.FAIL;
@@ -56,7 +72,8 @@ public class FarmersHoe extends Item implements IUpgradable {
 				}
 				return EnumActionResult.PASS;
 			}
-			if(this.tillRangeBlock(worldIn, player, pos, itemStack, this.range)) {
+			int range = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack) * 2 + 1;
+			if(this.tillRangeBlock(worldIn, player, pos, itemStack, range)) {
 				return EnumActionResult.SUCCESS;
 			}
 		}
@@ -77,7 +94,9 @@ public class FarmersHoe extends Item implements IUpgradable {
 		if(result) {
 			world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 0.5F, 1.0F);
 			if(!world.isRemote) {
-//				stack.damageItem(1, player);
+				if(EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
+					stack.damageItem(1, player);
+				}
 			}
 		}
 		return result;

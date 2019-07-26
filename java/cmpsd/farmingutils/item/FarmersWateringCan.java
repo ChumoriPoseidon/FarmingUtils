@@ -6,8 +6,11 @@ import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -21,20 +24,34 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
-public class FarmersWateringCan extends Item implements IUpgradable {
+public class FarmersWateringCan extends Item {
 
-	private int range = 1;
-
-	public FarmersWateringCan(Tier tier) {
-		this.setRegistryName("item_farmers_watering_can_" + tier.toString());
-		this.setUnlocalizedName("farmersWateringCan(" + tier.toString() + ")");
+	public FarmersWateringCan() {
+		this.setRegistryName("item_farmers_watering_can");
+		this.setUnlocalizedName("farmersWateringCan");
 		this.setCreativeTab(CreativeTabs.TOOLS);
 		this.setMaxStackSize(1);
-		this.setMaxDamage(tier.getDurability());
 
-		this.range = tier.getRange();
+		this.setMaxDamage(1024);
 
 		ModItem.ITEMS.add(this);
+	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public int getItemEnchantability() {
+		return 15;
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if(enchantment == Enchantments.EFFICIENCY) return true;
+		if(enchantment == Enchantments.UNBREAKING) return true;
+		return false;
 	}
 
 	@Override
@@ -46,7 +63,8 @@ public class FarmersWateringCan extends Item implements IUpgradable {
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack itemStack = player.getHeldItem(hand);
 		if(this.getDamage(itemStack) < this.getMaxDamage(itemStack)) {
-			if(!this.spinkleRangeWater(worldIn, player, pos, itemStack, this.range)) {
+			int range = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack) * 2 + 1;
+			if(!this.spinkleRangeWater(worldIn, player, pos, itemStack, range)) {
 				return EnumActionResult.FAIL;
 			}
 		}
@@ -68,7 +86,9 @@ public class FarmersWateringCan extends Item implements IUpgradable {
 		if(result) {
 			world.playSound(player, pos, SoundEvents.WEATHER_RAIN, SoundCategory.BLOCKS, 0.25F, 2.0F);
 			if(!world.isRemote) {
-//				stack.damageItem(1, player);
+				if(EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
+					stack.damageItem(1, player);
+				}
 			}
 		}
 		return result;

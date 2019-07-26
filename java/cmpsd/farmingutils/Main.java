@@ -18,6 +18,7 @@ public class Main {
 	@Mod.EventHandler
 	public void construct(FMLConstructionEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ModRegister());
+//		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 
 	@Mod.EventHandler
