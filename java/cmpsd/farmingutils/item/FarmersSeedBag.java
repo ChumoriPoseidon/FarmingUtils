@@ -1,8 +1,11 @@
 package cmpsd.farmingutils.item;
 
+import java.util.List;
+
 import cmpsd.farmingutils.ModItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -20,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FarmersSeedBag extends Item {
 
@@ -85,9 +90,10 @@ public class FarmersSeedBag extends Item {
 				}
 				IPlantable seed = (IPlantable)item;
 				if(seed.getPlantType(world, player.getPosition()) == EnumPlantType.Crop) {
-					ItemStack copy = subStack;
+					ItemStack copy = subStack.copy();
 					int value = subStack.getCount();
-					stack.damageItem(-value, player);
+//					stack.damageItem(-value, player);
+					stack.setItemDamage(this.getMaxDamage(stack) - value);
 					subStack.shrink(value);
 					NBTTagCompound nbt = stack.getTagCompound();
 					if(nbt == null) {
@@ -98,7 +104,11 @@ public class FarmersSeedBag extends Item {
 					copy.writeToNBT(nbtData);
 					nbt.setTag("Seed", nbtData);
 					stack.setTagCompound(nbt);
-					System.out.println("Set Seed: " + value);
+
+//					if(world.isRemote) {
+//						System.out.println("Set Seed: " + value);
+//						System.out.print("Stock: " + this.getDamage(stack));
+//					}
 					return true;
 				}
 			}
@@ -119,7 +129,11 @@ public class FarmersSeedBag extends Item {
 					player.getHeldItemOffhand().shrink(1);
 				}
 			}while(inventory.hasItemStack(stack) || this.getDamage(stack) > 0);
-			System.out.println("Refill Seed");
+
+//			if(player.world.isRemote) {
+//				System.out.println("Refill Seed");
+//				System.out.print("Stock: " + this.getDamage(stack));
+//			}
 			return true;
 		}
 		return false;
@@ -137,16 +151,23 @@ public class FarmersSeedBag extends Item {
 
 	private boolean plantRangeSeed(World world, EntityPlayer player, BlockPos pos, ItemStack stack, int range) {
 		int result = 0;
-		for(int dx = 0; dx < range; dx++) {
+		label: for(int dx = 0; dx < range; dx++) {
 			for(int dz = 0; dz < range; dz++) {
 				BlockPos posTarget = pos.add(-range / 2 + dx, 0, -range / 2 + dz);
 				IBlockState stateTarget = world.getBlockState(posTarget);
 				result += this.plantSeed(world, posTarget, stateTarget, stateTarget.getBlock(), this.getSeed(stack).getItem()) ? 1 : 0;
+				if(stack.getItemDamage() + result >= this.getMaxDamage(stack)) break label;
 			}
 		}
 		if(result > 0) {
 			if(!world.isRemote) {
 				stack.damageItem(result, player);
+				if(stack.getItemDamage() == this.getMaxDamage(stack)) {
+					NBTTagCompound nbt = stack.getTagCompound();
+					nbt.removeTag("Seed");
+					stack.setTagCompound(nbt);
+					stack.setItemDamage(0);
+				}
 			}
 		}
 		return result > 0;
@@ -156,16 +177,30 @@ public class FarmersSeedBag extends Item {
 		if(item instanceof IPlantable) {
 			IPlantable seed = (IPlantable)item;
 			if(seed.getPlantType(world, pos) == EnumPlantType.Crop) {
-				this.plant(world, pos, state, seed);
-				return true;
+				return this.plant(world, pos, state, seed);
 			}
 		}
 		return false;
 	}
 
-	private void plant(World world, BlockPos pos, IBlockState state, IPlantable item) {
+	private boolean plant(World world, BlockPos pos, IBlockState state, IPlantable item) {
 		if(state.getBlock().canSustainPlant(state, world, pos, EnumFacing.UP, item) && world.isAirBlock(pos.up())) {
 			world.setBlockState(pos.up(), item.getPlant(world, pos));
+			return true;
+		}
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		ItemStack seed = this.getSeed(stack);
+		if(!seed.isEmpty()) {
+			tooltip.add(String.format("%s: %d / %d", seed.getDisplayName(), (this.getMaxDamage(stack) - this.getDamage(stack)), stack.getMaxDamage()));
+		}
+		else {
+			tooltip.add("No Stock");
 		}
 	}
 
