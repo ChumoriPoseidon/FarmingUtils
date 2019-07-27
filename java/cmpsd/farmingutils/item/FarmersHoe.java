@@ -1,5 +1,6 @@
 package cmpsd.farmingutils.item;
 
+import cmpsd.farmingutils.ModConfig;
 import cmpsd.farmingutils.ModItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
@@ -94,7 +95,7 @@ public class FarmersHoe extends Item {
 		if(result) {
 			world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 0.5F, 1.0F);
 			if(!world.isRemote) {
-				if(EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
+				if(!ModConfig.unbreakbleTools || EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
 					stack.damageItem(1, player);
 				}
 			}

@@ -1,5 +1,6 @@
 package cmpsd.farmingutils.item;
 
+import cmpsd.farmingutils.ModConfig;
 import cmpsd.farmingutils.ModItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFarmland;
@@ -125,7 +126,7 @@ public class FarmersWateringCan extends Item {
 		if(result) {
 			world.playSound(player, pos, SoundEvents.WEATHER_RAIN, SoundCategory.BLOCKS, 0.25F, 2.0F);
 			if(!world.isRemote) {
-				if(EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
+				if(!ModConfig.unbreakbleTools || EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
 					stack.damageItem(1, player);
 				}
 			}
@@ -135,7 +136,7 @@ public class FarmersWateringCan extends Item {
 
 	private boolean sprinkleWater(World world, EntityPlayer player, BlockPos pos, IBlockState state, Block block) {
 		if(block == Blocks.FARMLAND) {
-			if(this.itemRand.nextInt(5) <= 1) {
+			if(this.itemRand.nextInt(2) == 0) {
 				world.setBlockState(pos, state.withProperty(BlockFarmland.MOISTURE, Integer.valueOf(7)), 2);
 				world.notifyBlockUpdate(pos, state, world.getBlockState(pos), 2);
 				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, 0);
@@ -147,7 +148,8 @@ public class FarmersWateringCan extends Item {
 
 	private boolean accelerateBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, Block block) {
 		if(block instanceof IGrowable || block instanceof IPlantable) {
-			if(this.itemRand.nextInt(3) <= 1) {
+			int rateAcceleration = ModConfig.rateGrowthAcceleration;
+			if(this.itemRand.nextInt(10) < rateAcceleration) {
 				if(!world.isRemote) {
 					world.scheduleBlockUpdate(pos, block, 0, 1);
 				}

@@ -20,8 +20,7 @@ public class ModItem {
 	public static Item farmersSickle;
 	public static Item farmersWateringCan;
 
-//	public static Item buddingFragment;
-//	public static Item buddingMetal;
+	public static Item growthSoil;
 
 
 
@@ -36,6 +35,7 @@ public class ModItem {
 		farmersSickle = new FarmersSickle();
 		farmersWateringCan = new FarmersWateringCan();
 
+//		growthSoil = new GrowthSoil();
 
 //		elementSoil = new ElementSoil();
 //		elementFertilizer = new ElementFertilizer();

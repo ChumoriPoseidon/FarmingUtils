@@ -1,5 +1,6 @@
 package cmpsd.farmingutils.item;
 
+import cmpsd.farmingutils.ModConfig;
 import cmpsd.farmingutils.ModItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCocoa;
@@ -60,7 +61,7 @@ public class FarmersSickle extends Item {
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack itemStack = player.getHeldItem(hand);
 		int range = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack) * 2 + 1;
-		if (this.harvestRangeBlock(worldIn, player, pos, itemStack, range)) {
+		if(this.harvestRangeBlock(worldIn, player, pos, itemStack, range)) {
 			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.PASS;
@@ -77,10 +78,10 @@ public class FarmersSickle extends Item {
 				}
 			}
 		}
-		if (result) {
+		if(result) {
 			world.playSound(player, pos, SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 0.25F, 1.0F);
-			if (!world.isRemote) {
-				if(EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
+			if(!world.isRemote) {
+				if(!ModConfig.unbreakbleTools || EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
 					stack.damageItem(1, player);
 				}
 			}
@@ -89,14 +90,14 @@ public class FarmersSickle extends Item {
 	}
 
 	private boolean harvestBlock(World world, BlockPos pos, IBlockState state, Block block) {
-		if (this.canHarvest(block)) {
+		if(this.canHarvest(block)) {
 			return this.harvestCrop(world, pos, state, block);
 		}
 		return false;
 	}
 
 	private boolean canHarvest(Block block) {
-		if (block instanceof IPlantable || block instanceof IGrowable) {
+		if(block instanceof IPlantable || block instanceof IGrowable) {
 			return true;
 		}
 		if(block == Blocks.PUMPKIN || block == Blocks.MELON_BLOCK) {
@@ -172,9 +173,7 @@ public class FarmersSickle extends Item {
 	//	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos,
-			EntityLivingBase entityLiving) {
-
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
 		return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
 	}
 }
