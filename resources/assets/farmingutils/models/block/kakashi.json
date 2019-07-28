@@ -1,0 +1,85 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"tex_leg": "minecraft:blocks/log_oak",
+		"tex_body0": "minecraft:blocks/hay_block_side",
+		"tex_body1": "minecraft:blocks/hay_block_top",
+		"tex_face0": "minecraft:blocks/pumpkin_side",
+		"tex_face1": "minecraft:blocks/pumpkin_face_off",
+		"tex_face2": "minecraft:blocks/pumpkin_top",
+		"particle": "minecraft:blocks/log_oak"
+	},
+	"elements": [
+		{
+			"name": "leg",
+			"from": [7, 0, 7],
+			"to": [9, 6, 9],
+			"faces": {
+				"north": {"uv": [0, 7, 2, 13], "texture": "#tex_leg"},
+				"east": {"uv": [4, 9, 6, 15], "texture": "#tex_leg"},
+				"south": {"uv": [4, 4, 6, 10], "texture": "#tex_leg"},
+				"west": {"uv": [12, 2, 14, 8], "texture": "#tex_leg"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#tex_leg"},
+				"down": {"uv": [7, 5, 9, 7], "texture": "#tex_leg"}
+			}
+		},
+		{
+			"name": "body",
+			"from": [4, 6, 6],
+			"to": [12, 14, 10],
+			"faces": {
+				"north": {"uv": [8, 1, 16, 9], "texture": "#tex_body0"},
+				"east": {"uv": [3, 1, 7, 9], "texture": "#tex_body0"},
+				"south": {"uv": [2, 1, 10, 9], "texture": "#tex_body0"},
+				"west": {"uv": [11, 1, 15, 9], "texture": "#tex_body0"},
+				"up": {"uv": [3, 3, 11, 7], "texture": "#tex_body1"},
+				"down": {"uv": [2, 9, 10, 13], "texture": "#tex_body1"}
+			}
+		},
+		{
+			"name": "arm_L",
+			"from": [1, 11, 7],
+			"to": [4, 13, 9],
+			"faces": {
+				"north": {"uv": [8, 2, 10, 5], "rotation": 90, "texture": "#tex_leg"},
+				"east": {"uv": [0, 0, 2, 2], "texture": "#tex_leg"},
+				"south": {"uv": [4, 6, 6, 9], "rotation": 90, "texture": "#tex_leg"},
+				"west": {"uv": [7, 5, 9, 7], "texture": "#tex_leg"},
+				"up": {"uv": [8, 3, 10, 6], "rotation": 90, "texture": "#tex_leg"},
+				"down": {"uv": [2, 2, 4, 5], "rotation": 90, "texture": "#tex_leg"}
+			}
+		},
+		{
+			"name": "arm_R",
+			"from": [12, 11, 7],
+			"to": [15, 13, 9],
+			"faces": {
+				"north": {"uv": [3, 5, 5, 8], "rotation": 90, "texture": "#tex_leg"},
+				"east": {"uv": [4, 7, 6, 9], "texture": "#tex_leg"},
+				"south": {"uv": [5, 3, 7, 6], "rotation": 90, "texture": "#tex_leg"},
+				"west": {"uv": [0, 0, 2, 2], "texture": "#tex_leg"},
+				"up": {"uv": [4, 9, 6, 12], "rotation": 90, "texture": "#tex_leg"},
+				"down": {"uv": [12, 3, 14, 6], "rotation": 90, "texture": "#tex_leg"}
+			}
+		},
+		{
+			"name": "face",
+			"from": [5, 14, 5],
+			"to": [11, 20, 11],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#tex_face1"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#tex_face0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#tex_face0"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#tex_face0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#tex_face2"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#tex_face0"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"translation": [0, -2, 0],
+			"scale": [0.75, 0.75, 1]
+		}
+	}
+}

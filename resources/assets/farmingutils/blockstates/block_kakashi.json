@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "farmingutils:kakashi" },
+        "facing=south": { "model": "farmingutils:kakashi", "y": 180 },
+        "facing=west":  { "model": "farmingutils:kakashi", "y": 270 },
+        "facing=east":  { "model": "farmingutils:kakashi", "y": 90 }
+    }
+}
