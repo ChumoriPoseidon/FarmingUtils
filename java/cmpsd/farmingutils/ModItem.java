@@ -7,8 +7,6 @@ import cmpsd.farmingutils.item.FarmersHoe;
 import cmpsd.farmingutils.item.FarmersSeedBag;
 import cmpsd.farmingutils.item.FarmersSickle;
 import cmpsd.farmingutils.item.FarmersWateringCan;
-import cmpsd.farmingutils.item.Gloves;
-import cmpsd.farmingutils.item.GrowthSoil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
@@ -16,8 +14,6 @@ import net.minecraftforge.client.model.ModelLoader;
 public class ModItem {
 
 	public static List<Item> ITEMS = new ArrayList<>();
-
-	public static Item gloves;
 
 	public static Item farmersSeedBag;
 	public static Item farmersHoe;
@@ -28,20 +24,18 @@ public class ModItem {
 
 
 
-//	public static Item soilFragment;
-//	public static Item fertilizerFragment;
-//	public static Item fertilizer;
+	public static Item soilFragment;
+	public static Item fertilizerFragment;
+	public static Item fertilizer;
 
 	public static void register() {
-
-		gloves = new Gloves();
 
 		farmersSeedBag = new FarmersSeedBag();
 		farmersHoe = new FarmersHoe();
 		farmersSickle = new FarmersSickle();
 		farmersWateringCan = new FarmersWateringCan();
 
-		growthSoil = new GrowthSoil();
+//		growthSoil = new GrowthSoil();
 
 //		elementSoil = new ElementSoil();
 //		elementFertilizer = new ElementFertilizer();
@@ -50,14 +44,11 @@ public class ModItem {
 
 	public static void registerModel() {
 
-		registerItemRender(gloves);
-
 		registerItemRender(farmersSeedBag);
 		registerItemRender(farmersHoe);
 		registerItemRender(farmersSickle);
 		registerItemRender(farmersWateringCan);
 
-		registerItemRender(growthSoil);
 
 //		registerItemRender(elementSoil);
 //		registerItemRender(elementFertilizer);

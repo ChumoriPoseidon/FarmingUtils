@@ -2,11 +2,10 @@ package cmpsd.farmingutils.block;
 
 import cmpsd.farmingutils.ModBlock;
 import cmpsd.farmingutils.ModItem;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,12 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class Kakashi extends Block {
-
-	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-
-	protected static final AxisAlignedBB X_AXIS_AABB = new AxisAlignedBB(0.25D, 0.0D, 0.0D, 0.75D, 1.0D, 1.0D);
-	protected static final AxisAlignedBB Z_AXIS_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.25D, 1.0D, 1.0D, 0.75D);
+public class Kakashi extends BlockHorizontal {
 
 	public Kakashi() {
 		super(Material.WOOD);
@@ -52,12 +46,6 @@ public class Kakashi extends Block {
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
-		return enumfacing.getAxis() == EnumFacing.Axis.X ? X_AXIS_AABB : Z_AXIS_AABB;
-	}
-
-	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
 		return NULL_AABB;
 	}
@@ -74,9 +62,6 @@ public class Kakashi extends Block {
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		if(placer.isSneaking()) {
-			return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
-		}
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
@@ -93,16 +78,5 @@ public class Kakashi extends Block {
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] {FACING});
-	}
-
-	public boolean setTargetPos(World world, BlockPos pos, BlockPos posSelf) {
-		double distance = pos.distanceSq(posSelf);
-		System.out.println("Distance: " + distance);
-		if(distance <= 10.0D) {
-			System.out.println("Yes");
-			return true;
-		}
-		System.out.println("No");
-		return false;
 	}
 }
