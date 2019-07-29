@@ -79,4 +79,15 @@ public class Kakashi extends BlockHorizontal {
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] {FACING});
 	}
+
+	public boolean setTargetPos(World world, BlockPos pos, BlockPos posSelf) {
+		double distance = pos.distanceSq(posSelf);
+		System.out.println("Distance: " + distance);
+		if(distance <= 10.0D) {
+			System.out.println("Yes");
+			return true;
+		}
+		System.out.println("No");
+		return false;
+	}
 }
