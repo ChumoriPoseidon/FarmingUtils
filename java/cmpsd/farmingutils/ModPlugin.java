@@ -6,7 +6,7 @@ public class ModPlugin {
 
 	public static boolean loadedBotania = false;
 
-	public static void preInit() {
+	public static void init() {
 		if(Loader.isModLoaded("botania")) {
 			loadedBotania = true;
 		}
