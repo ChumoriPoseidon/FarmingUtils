@@ -1,10 +1,13 @@
 package cmpsd.farmingutils;
 
+import cmpsd.farmingutils.tileentity.TileEntity_Kakashi;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,6 +44,6 @@ public class ModRegister {
 //	}
 
 	public static void registerTileEntities() {
-
+		GameRegistry.registerTileEntity(TileEntity_Kakashi.class, new ResourceLocation(Reference.MODID, "te_kakashi"));
 	}
 }
