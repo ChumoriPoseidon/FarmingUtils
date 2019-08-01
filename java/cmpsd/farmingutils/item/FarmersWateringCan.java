@@ -9,54 +9,36 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
-public class FarmersWateringCan extends Item {
+
+/*
+ * TODO Adjust function "accelerateBlock()" called when use WateringCan.
+ */
+
+public class FarmersWateringCan extends FarmersTool {
 
 	public FarmersWateringCan() {
 		this.setRegistryName("item_farmers_watering_can");
 		this.setUnlocalizedName("farmersWateringCan");
 		this.setCreativeTab(CreativeTabs.TOOLS);
-		this.setMaxStackSize(1);
-
-		this.setMaxDamage(1024);
 
 		ModItem.ITEMS.add(this);
-	}
-
-	@Override
-	public boolean isEnchantable(ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	public int getItemEnchantability() {
-		return 15;
-	}
-
-	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if(enchantment == Enchantments.EFFICIENCY) return true;
-		if(enchantment == Enchantments.UNBREAKING) return true;
-		return false;
 	}
 
 	@Override
@@ -70,7 +52,7 @@ public class FarmersWateringCan extends Item {
 			ItemStack itemStack = playerIn.getHeldItem(handIn);
 			return this.refillWater(worldIn, playerIn, itemStack);
 		}
-		return super.onItemRightClick(worldIn, playerIn, handIn);
+		return new ActionResult<ItemStack>(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
 	}
 
 	private ActionResult<ItemStack> refillWater(World world, EntityPlayer player, ItemStack stack) {
@@ -124,7 +106,7 @@ public class FarmersWateringCan extends Item {
 			}
 		}
 		if(result) {
-			world.playSound(player, pos, SoundEvents.WEATHER_RAIN, SoundCategory.BLOCKS, 0.25F, 2.0F);
+//			world.playSound(player, pos, SoundEvents.WEATHER_RAIN, SoundCategory.BLOCKS, 0.25F, 2.0F);
 			if(!world.isRemote) {
 				if(!ModConfig.unbreakbleTools || EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
 					stack.damageItem(1, player);

@@ -2,6 +2,7 @@ package cmpsd.farmingutils.tileentity;
 
 import cmpsd.farmingutils.block.Kakashi;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
@@ -16,6 +17,7 @@ public class TileEntity_Kakashi extends TileEntity implements ITickable {
 	private int timeLeft;
 	private boolean isTarget;
 	private BlockPos targetPos;
+	private ItemStack heldTool;
 
 	@Override
 	public void update() {
@@ -27,7 +29,7 @@ public class TileEntity_Kakashi extends TileEntity implements ITickable {
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("TimeLeft", this.timeLeft);
 		compound.setBoolean("IsTarget", this.isTarget);
-		compound.setTag("TargetPos", NBTUtil.createPosTag(this.targetPos));
+		compound.setTag("TargetPos", NBTUtil.createPosTag(this.getTargetPos()));
 		return super.writeToNBT(compound);
 	}
 
