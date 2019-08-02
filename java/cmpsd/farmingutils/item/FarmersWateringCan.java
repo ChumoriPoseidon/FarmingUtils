@@ -28,10 +28,13 @@ import net.minecraftforge.common.IPlantable;
 
 
 /*
- * TODO Adjust function "accelerateBlock()" called when use WateringCan.
+ * TODO Adjust function "accelerateBlock()" called when use WateringCan. (8/2)
  */
 
 public class FarmersWateringCan extends FarmersTool {
+
+	private int time = 0;
+	private boolean canUse = false;
 
 	public FarmersWateringCan() {
 		this.setRegistryName("item_farmers_watering_can");
@@ -45,6 +48,15 @@ public class FarmersWateringCan extends FarmersTool {
 	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.NONE;
 	}
+
+//	@Override
+//	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+//		Main.LOGGER.info(String.format("Update by %s", entityIn.toString()));
+//		if(entityIn instanceof FakePlayer) {
+//			FakePlayer fakePlayer = (FakePlayer)entityIn;
+//		}
+//		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+//	}
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
@@ -83,24 +95,33 @@ public class FarmersWateringCan extends FarmersTool {
 
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		ItemStack itemStack = player.getHeldItem(hand);
-		if(this.getDamage(itemStack) < this.getMaxDamage(itemStack)) {
-			int range = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack) * 2 + 1;
-			if(!this.spinkleRangeWater(worldIn, player, pos, itemStack, range)) {
-				return EnumActionResult.FAIL;
+//		worldIn.spawnParticle(EnumParticleTypes.WATER_DROP, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, 0);
+//		this.time++;
+//		this.canUse = ((this.time % 4) == 0);
+		this.canUse = true;
+
+		if(this.canUse) {
+			ItemStack itemStack = player.getHeldItem(hand);
+			if(this.getDamage(itemStack) < this.getMaxDamage(itemStack)) {
+				int range = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, itemStack) * 2 + 1;
+				if(!this.spinkleRangeWater(worldIn, player, pos, itemStack, range)) {
+					return EnumActionResult.FAIL;
+				}
 			}
 		}
-		return EnumActionResult.FAIL;
+		return EnumActionResult.PASS;
 	}
 
 	private boolean spinkleRangeWater(World world, EntityPlayer player, BlockPos pos, ItemStack stack, int range) {
 		boolean result = false;
 		for(int dx = 0; dx < range; dx++) {
-			for(int dy = 0; dy < 3; dy++) {
+			for(int dy = 0; dy < 1; dy++) {
 				for(int dz = 0; dz < range; dz++) {
-					BlockPos posTarget = pos.add(-range / 2 + dx, -1 + dy, -range / 2 + dz);
+					BlockPos posTarget = pos.add(-range / 2 + dx, dy, -range / 2 + dz);
+					BlockPos posTargetDown = posTarget.down();
 					IBlockState stateTarget = world.getBlockState(posTarget);
-					result |= this.sprinkleWater(world, player, posTarget, stateTarget, stateTarget.getBlock());
+					IBlockState stateTargetDown = world.getBlockState(posTargetDown);
+					result |= this.sprinkleWater(world, player, posTargetDown, stateTargetDown, stateTargetDown.getBlock());
 					result |= this.accelerateBlock(world, player, posTarget, stateTarget, stateTarget.getBlock());
 				}
 			}
@@ -111,6 +132,7 @@ public class FarmersWateringCan extends FarmersTool {
 				if(!ModConfig.unbreakbleTools || EnchantmentHelper.getEnchantmentLevel(Enchantments.UNBREAKING, stack) < Enchantments.UNBREAKING.getMaxLevel()) {
 					stack.damageItem(1, player);
 				}
+//				player.playSound(SoundEvents.WEATHER_RAIN, 0.25F, 2.0F);
 			}
 		}
 		return result;
@@ -118,11 +140,12 @@ public class FarmersWateringCan extends FarmersTool {
 
 	private boolean sprinkleWater(World world, EntityPlayer player, BlockPos pos, IBlockState state, Block block) {
 		if(block == Blocks.FARMLAND) {
-			if(this.itemRand.nextInt(2) == 0) {
-				world.setBlockState(pos, state.withProperty(BlockFarmland.MOISTURE, Integer.valueOf(7)), 2);
-				world.notifyBlockUpdate(pos, state, world.getBlockState(pos), 2);
-				world.spawnParticle(EnumParticleTypes.WATER_SPLASH, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D, 0);
-				return true;
+			if(state.getValue(BlockFarmland.MOISTURE) < 7) {
+				if(this.itemRand.nextInt(2) == 0) {
+					world.setBlockState(pos, state.withProperty(BlockFarmland.MOISTURE, Integer.valueOf(7)), 4);
+//					world.notifyBlockUpdate(pos, state, world.getBlockState(pos), 2);
+					return true;
+				}
 			}
 		}
 		return false;
