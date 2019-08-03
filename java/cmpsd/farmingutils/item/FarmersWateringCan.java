@@ -77,17 +77,14 @@ public class FarmersWateringCan extends FarmersTool {
 		}
 		BlockPos pos = rayTraceResult.getBlockPos();
 		if(!player.canPlayerEdit(pos.offset(rayTraceResult.sideHit), rayTraceResult.sideHit, stack)) {
-			System.out.println("false 1");
 			return new ActionResult(EnumActionResult.PASS, stack);
 		}
 		IBlockState blockState = world.getBlockState(pos);
 		Material material = blockState.getMaterial();
 		if(material == Material.WATER && ((Integer)blockState.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 11);
-//			player.addStat(StatList.getObjectUseStats(this));
 			player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 			stack.setItemDamage(0);
-			System.out.println("success");
 			return new ActionResult(EnumActionResult.SUCCESS, stack);
 		}
 		return new ActionResult(EnumActionResult.PASS, stack);
@@ -115,7 +112,7 @@ public class FarmersWateringCan extends FarmersTool {
 	private boolean spinkleRangeWater(World world, EntityPlayer player, BlockPos pos, ItemStack stack, int range) {
 		boolean result = false;
 		for(int dx = 0; dx < range; dx++) {
-			for(int dy = 0; dy < 1; dy++) {
+			for(int dy = -1; dy <= 1; dy++) {
 				for(int dz = 0; dz < range; dz++) {
 					BlockPos posTarget = pos.add(-range / 2 + dx, dy, -range / 2 + dz);
 					BlockPos posTargetDown = posTarget.down();
