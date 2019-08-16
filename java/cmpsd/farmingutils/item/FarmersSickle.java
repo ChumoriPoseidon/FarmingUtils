@@ -28,12 +28,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
-
-/*
- * TODO Enable to collect items harvested by Sickle.
- */
-
-
 public class FarmersSickle extends FarmersTool {
 
 	public FarmersSickle() {

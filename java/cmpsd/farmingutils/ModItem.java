@@ -3,6 +3,7 @@ package cmpsd.farmingutils;
 import java.util.ArrayList;
 import java.util.List;
 
+import cmpsd.farmingutils.item.Debugger;
 import cmpsd.farmingutils.item.FarmersHoe;
 import cmpsd.farmingutils.item.FarmersSeedBag;
 import cmpsd.farmingutils.item.FarmersSickle;
@@ -17,13 +18,17 @@ public class ModItem {
 
 	public static List<Item> ITEMS = new ArrayList<>();
 
-	public static Item gloves;
+	// Debugger
+	public static Item debugger;
 
+	// Configurator
+	public static Item gloves;
+	// Tool
 	public static Item farmersSeedBag;
 	public static Item farmersHoe;
 	public static Item farmersSickle;
 	public static Item farmersWateringCan;
-
+	// Other
 	public static Item growthSoil;
 
 
@@ -32,6 +37,8 @@ public class ModItem {
 //	public static Item fertilizer;
 
 	public static void register() {
+
+		debugger = new Debugger();
 
 		gloves = new Gloves();
 

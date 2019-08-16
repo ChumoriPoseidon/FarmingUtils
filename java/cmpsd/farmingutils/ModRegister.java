@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,18 +26,18 @@ public class ModRegister {
 		event.getRegistry().registerAll(ModBlock.BLOCKS.toArray(new Block[0]));
 	}
 
-//	@SubscribeEvent
-//	public void registerEntities(RegistryEvent.Register<EntityEntry> event) {
-//		ModEntity.register();
-//		event.getRegistry().registerAll(ModEntity.ENTITIES.toArray(new EntityEntry[0]));
-//	}
+	@SubscribeEvent
+	public void registerEntities(RegistryEvent.Register<EntityEntry> event) {
+		ModEntity.register();
+		event.getRegistry().registerAll(ModEntity.ENTITIES.toArray(new EntityEntry[0]));
+	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void registerModels(ModelRegistryEvent event) {
 		ModItem.registerModel();
 		ModBlock.registerModel();
-//		ModEntity.registerModel();
+		ModEntity.registerModel();
 	}
 
 //	@SubscribeEvent

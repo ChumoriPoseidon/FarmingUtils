@@ -26,11 +26,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
-
-/*
- * TODO Adjust function "accelerateBlock()" called when use WateringCan. (8/2)
- */
-
 public class FarmersWateringCan extends FarmersTool {
 
 	private int time = 0;
